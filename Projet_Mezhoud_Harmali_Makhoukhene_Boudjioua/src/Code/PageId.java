@@ -18,13 +18,13 @@ public class PageId {
 		return  FileIdx;
 		
 	}
-	public void setPageIdx(int FileId){
-		 this.FileIdx=FileId;
+	public void setPageIdx(int PageId){
+		this.PageIdx=PageId;
 		
 	}
-	public void setFileIdx(int PageId){
-		 this.PageIdx=PageId;
-		
+	public void setFileIdx(int FileId){
+		 
+		 this.FileIdx=FileId;
 	}
 	
 }

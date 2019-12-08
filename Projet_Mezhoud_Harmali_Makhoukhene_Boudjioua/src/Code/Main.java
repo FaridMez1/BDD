@@ -12,7 +12,14 @@ public class Main {
 	public static String chemin;
 
 	public static void main(String[] args) throws IOException {
-		Constantes.chemin = "Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB";
+		Constantes.chemin = "/home/mezhoud/Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB";
+		
+		/*diskmanager = Diskmanager.getInstance(); diskmanager.createFile(0); page =
+				  new PageId(0, 0);
+				 
+				 
+				  diskmanager.addPage(0, page);
+				    diskmanager.readPage(page, buff);*/
 		/*DBManager dbManager = DBManager.getInstance();
 		File file = new File("/home/bouredjioua/Bureau/BDD/S1-1.csv");
 		String[] tab = { "insert", "R", "1", "aab", "2" };
@@ -54,9 +61,11 @@ public class Main {
 		 * 
 		 */
 		
-		Constantes.chemin ="Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB";
+	
 		// DBManager dbm= new DBManager();
-		DBManager dbm = DBManager.getInstance();
+		
+				
+				    DBManager dbm = DBManager.getInstance();
 		dbm.Init();
 
 		Scanner sc = new Scanner(System.in);

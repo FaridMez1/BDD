@@ -36,19 +36,7 @@ public class DBManager {
 			clean();
 			break;
 		case "create":
-			String relName = maCommande.get(1);
-			int nbColonnes = Integer.valueOf(maCommande.get(2));
-
-			String nomTypeColonne;
-
-			ArrayList<String> array = new ArrayList<String>();
-			for (int i = 0; i < nbColonnes; i++) {
-
-				nomTypeColonne = maCommande.get(3 + i);
-				array.add(nomTypeColonne);
-
-			}
-			createRelation(relName, nbColonnes, array);
+			create(maCommande);
 			break;
 
 		case "select":
@@ -75,12 +63,28 @@ public class DBManager {
 	}
 
 	//
+	public void create(ArrayList<String> maCommande) throws IOException {
+		String relName = maCommande.get(1);
+		int nbColonnes = Integer.valueOf(maCommande.get(2));
+
+		String nomTypeColonne;
+
+		ArrayList<String> array = new ArrayList<String>();
+		for (int i = 0; i < nbColonnes; i++) {
+
+			nomTypeColonne = maCommande.get(3 + i);
+			array.add(nomTypeColonne);
+
+		}
+		createRelation(relName, nbColonnes, array);
+	}
+
 	public void createRelation(String nomRelation, int nbnbColonnes, List<String> typesnbColonnes) throws IOException {
 		RelDef reldef = new RelDef(nomRelation, nbnbColonnes, typesnbColonnes);
-		//DBDef.getInstance().addRellation(reldef);
+		// DBDef.getInstance().addRellation(reldef);
 		reldef.setNbColonnes(nbnbColonnes);
-	 	reldef.setNomRelation(nomRelation);
-	 	reldef.setTypeColonnes(typesnbColonnes);
+		reldef.setNomRelation(nomRelation);
+		reldef.setTypeColonnes(typesnbColonnes);
 		// calculer le recordSizex²
 
 		int sommeRecord = 0;
@@ -104,24 +108,21 @@ public class DBManager {
 
 		// calculer slotCount
 		int slotCount = (int) (Constantes.pageSize / sommeRecord);
-		//DBDef.getInstance().addRellation(reldef);
-		
-		int bytmap= slotCount/sommeRecord;
-			slotCount=slotCount-bytmap;
-			reldef.setRecordSize(sommeRecord);
-			 
-		    reldef.setSlotCount(slotCount);
-		  
-		  /////// modifier la valeur de filedIdx 
+		// DBDef.getInstance().addRellation(reldef);
 
-		   
+		int bytmap = slotCount / sommeRecord;
+		slotCount = slotCount - bytmap;
+		reldef.setRecordSize(sommeRecord);
 
-		    //tp4 a les brobros
-		   reldef.setFileIdx(dbDef.getCompteur());
-		    dbDef.addRellation(reldef);
-		 
+		reldef.setSlotCount(slotCount);
 
-		    fileManager.createRelationFile(reldef);
+		/////// modifier la valeur de filedIdx
+
+		// tp4 a les brobros
+		reldef.setFileIdx(dbDef.getCompteur());
+		dbDef.addRellation(reldef);
+
+		fileManager.createRelationFile(reldef);
 	}
 	//// methode similaire a createRelation ....
 	// public void create(ArrayList<String>commande) {
@@ -147,10 +148,10 @@ public class DBManager {
 
 		// supprimer les fichiers .rf et le fichier Catalog.def
 
-		//File fileCatlg = new File("home/mezhoud/Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB/" + "catalog.def");
-		// fileCatlg.delete();
+		File fileCatlg = new File("/home/mezhoud/Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB/" + "catalog.def");
+		fileCatlg.delete();
 
-		File f = new File("home/mezhoud/Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB");
+		File f = new File("/home/mezhoud/Projet_Mezhoud_Harmali_Makhoukhene_Bouredjioua/DB");
 
 		File[] listeFichiers = f.listFiles();
 
@@ -186,10 +187,10 @@ public class DBManager {
 
 		String relName = commande.get(1);
 		ArrayList<Record> allRecords = new ArrayList<Record>();
-		//RelDef reldef = new RelDef(relName, 0, null);
-		//HeapFile heapFile = new HeapFile(reldef);
-		for(int i=0;i< fileManager.getHeapFiles().size();i++) {
-		allRecords.addAll(fileManager.getHeapFiles().get(i).getAllRecords());
+		// RelDef reldef = new RelDef(relName, 0, null);
+		// HeapFile heapFile = new HeapFile(reldef);
+		for (int i = 0; i < fileManager.getHeapFiles().size(); i++) {
+			allRecords.addAll(fileManager.getHeapFiles().get(i).getAllRecords());
 		}
 		for (int i = 0; i < allRecords.size(); i++) {
 			for (int k = 0; k < allRecords.get(i).getValues().size(); k++) {
@@ -204,16 +205,15 @@ public class DBManager {
 		FileManager fileManager = FileManager.getInstance();
 
 		String relName = commande.get(1);
-		
-		//j'ai met celui en commentaire car je pense on a pas besoin 
-		
-		
-		//record.relDef.setNomRelation(relName);
+
+		// j'ai met celui en commentaire car je pense on a pas besoin
+
+		// record.relDef.setNomRelation(relName);
 		List<String> li = new ArrayList<String>();
 		for (int i = 2; i < commande.size(); i++) {
 			li.add(commande.get(i));
 		}
-
+        
 		record.setValues(li);
 		fileManager.InsertRecordInRelation(record, relName);
 	}

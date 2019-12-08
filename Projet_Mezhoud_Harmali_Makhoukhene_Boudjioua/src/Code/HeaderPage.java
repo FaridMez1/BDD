@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class HeaderPage {
 	private int nbrDataPage;
-	// private int slotLibre;
+	 int slotLibre=4096;
 	private ArrayList<Integer> dataPages;
 
 	public HeaderPage() {
@@ -36,7 +36,7 @@ public class HeaderPage {
 	public void addDataP( int slotLibre) {
 
 		this.dataPages.add(slotLibre);
-
+        setDataPages(dataPages);
 	}
 
 }
