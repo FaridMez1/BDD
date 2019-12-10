@@ -187,8 +187,8 @@ public class DBManager {
 
 		String relName = commande.get(1);
 		ArrayList<Record> allRecords = new ArrayList<Record>();
-		// RelDef reldef = new RelDef(relName, 0, null);
-		// HeapFile heapFile = new HeapFile(reldef);
+		RelDef reldef = new RelDef(relName, 0, null);
+		HeapFile heapFile = new HeapFile(reldef);
 		for (int i = 0; i < fileManager.getHeapFiles().size(); i++) {
 			allRecords.addAll(fileManager.getHeapFiles().get(i).getAllRecords());
 		}

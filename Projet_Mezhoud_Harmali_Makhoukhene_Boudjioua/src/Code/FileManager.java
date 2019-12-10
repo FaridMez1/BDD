@@ -63,7 +63,7 @@ public class FileManager extends Object {
 		for (int i = 0; i < heapFilesList.size(); i++) {
 			String relN = heapFilesList.get(i).getRelDef().getNomRelation();
 			if (relN.equals(relName)) {
-				recordList.addAll((Collection<? extends Record>) heapFilesList.get(i).getRelDef());
+				recordList.addAll( (Collection<? extends Record>) heapFilesList.get(i).getRelDef());
 			}
 		}
 

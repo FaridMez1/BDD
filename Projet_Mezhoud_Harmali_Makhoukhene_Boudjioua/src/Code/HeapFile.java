@@ -46,32 +46,35 @@ class HeapFile {
 		HeaderPage headerPage = new HeaderPage();
 		// recuperer le contenu de headerPage
 		ByteBuffer bbBuffer = ByteBuffer.wrap(headbyteBuffer);
+		bbBuffer.position(0);
 		int nbrDataPage = bbBuffer.getInt();
 		for (int i = 0; i < nbrDataPage; i++) {
-			headerPage.addDataP(bbBuffer.getInt());
+			headerPage.setDataPages(bbBuffer.getInt());
 
 		}
 
 		// getSlotCount ------------------------------------------------------------a
 		// verfier
 		Diskmanager.getInstance().addPage(relDef.getFileIdx(), pageId);
-		headerPage.addDataP(Constantes.pageSize - relDef.getRecordSize());
-		ArrayList<Integer> list;
+		headerPage.setDataPages(Constantes.pageSize - relDef.getRecordSize());
+		ArrayList<Integer> list= new ArrayList<>();
 		
 		list = headerPage.getDataPages();
 
-		headerPage.setDataPages(list);
+		//headerPage.setDataPages(list);
 		int result = nbrDataPage + 1;
 		headerPage.setNbrDataPage(result);
 		list = headerPage.getDataPages();
 		// ecriture dans le headerPage
 
-
+		bbBuffer.position(0);
 		bbBuffer.putInt(result);
 		for (int i = 0; i < result; i++) {
 			bbBuffer.putInt(list.get(i));
 
 		}
+		// verfier 
+		byte[] headbyteBuff=    bufferManager.getPage(headPage);
 		bufferManager.freePage(headPage, 1);
 
 		byte[] dataPageBuffer = bufferManager.getPage(pageId);
@@ -93,9 +96,10 @@ class HeapFile {
 		HeaderPage headerPage = new HeaderPage();
 		// recuperer le contenu de headerPage
 		ByteBuffer bbBuffer = ByteBuffer.wrap(headbyteBuffer);
+		bbBuffer.position(0);
 		headerPage.setNbrDataPage(bbBuffer.getInt());
 		for (int i = 0; i < headerPage.getNbrDataPage(); i++) {
-			headerPage.addDataP(bbBuffer.getInt());
+			headerPage.setDataPages(bbBuffer.getInt());
 		}
 		ArrayList<Integer> list;
 		list = headerPage.getDataPages();
@@ -105,7 +109,7 @@ class HeapFile {
 			if (list.get(i) > 0) {
 
 				pageId.setFileIdx(relDef.getFileIdx());
-				pageId.setPageIdx(i);
+				pageId.setPageIdx(i+1);
 
 				bufferManager.freePage(headPage, 0);
 				return pageId;
@@ -128,9 +132,10 @@ class HeapFile {
 		ArrayList<Integer> list;
 		list = head.getDataPages();
 		ByteBuffer bbBuffer = ByteBuffer.wrap(bufferhead);
+		bbBuffer.position(0);
 		int nbrDataPage = bbBuffer.getInt();
 		for (int i = 0; i < nbrDataPage; i++) {
-			head.addDataP(bbBuffer.getInt());
+			head.setDataPages(bbBuffer.getInt());
 
 		}
 
@@ -201,7 +206,7 @@ class HeapFile {
 		PageId head = new PageId(relDef.getFileIdx(), 0);
 		byte[] bufferPage=bufferManager.getPage(head);
 		ByteBuffer bb=ByteBuffer.wrap(bufferPage);
-		
+		bb.position(0);
 		int nbrDatacount= bb.getInt();
 		HeaderPage header = new HeaderPage();
 		int nbDataPage = header.getNbrDataPage();
