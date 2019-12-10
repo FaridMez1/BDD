@@ -26,13 +26,17 @@ public class HeaderPage {
 
 	}
 
-	public void setDataPages(int dataPage) {
-		this.dataPages.add(dataPage);
+	public void setDataPages(ArrayList<Integer> dataPages) {
+		if (this.dataPages == null)
+			this.dataPages = dataPages;
+		else
+			this.dataPages = dataPages;
+	}
 
-	//public void addDataP( int slotLibre) {
+	public void addDataP( int slotLibre) {
 
-		//this.dataPages.add(slotLibre);
-        //setDataPages(dataPages);
+		this.dataPages.add(slotLibre);
+        setDataPages(dataPages);
 	}
 
 }
