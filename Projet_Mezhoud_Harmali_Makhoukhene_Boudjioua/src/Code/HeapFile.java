@@ -14,6 +14,8 @@ class HeapFile {
 
 	BufferManager bufferManager = BufferManager.getInstance();
 	Diskmanager diskManager = Diskmanager.getInstance();
+	//modif
+	FileManager fileManager=FileManager.getInstance();
 
 	public RelDef getRelDef() {
 		return relDef;
@@ -46,32 +48,35 @@ class HeapFile {
 		HeaderPage headerPage = new HeaderPage();
 		// recuperer le contenu de headerPage
 		ByteBuffer bbBuffer = ByteBuffer.wrap(headbyteBuffer);
+		bbBuffer.position(0);
 		int nbrDataPage = bbBuffer.getInt();
 		for (int i = 0; i < nbrDataPage; i++) {
-			headerPage.addDataP(bbBuffer.getInt());
+			headerPage.setDataPages(bbBuffer.getInt());
 
 		}
 
 		// getSlotCount ------------------------------------------------------------a
 		// verfier
 		Diskmanager.getInstance().addPage(relDef.getFileIdx(), pageId);
-		headerPage.addDataP(Constantes.pageSize - relDef.getRecordSize());
-		ArrayList<Integer> list;
+		headerPage.setDataPages(Constantes.pageSize - relDef.getRecordSize());
+		ArrayList<Integer> list= new ArrayList<>();
 		
 		list = headerPage.getDataPages();
 
-		headerPage.setDataPages(list);
+		//headerPage.setDataPages(list);
 		int result = nbrDataPage + 1;
 		headerPage.setNbrDataPage(result);
 		list = headerPage.getDataPages();
 		// ecriture dans le headerPage
 
-
+		bbBuffer.position(0);
 		bbBuffer.putInt(result);
 		for (int i = 0; i < result; i++) {
 			bbBuffer.putInt(list.get(i));
 
 		}
+		// verfier 
+		byte[] headbyteBuff=    bufferManager.getPage(headPage);
 		bufferManager.freePage(headPage, 1);
 
 		byte[] dataPageBuffer = bufferManager.getPage(pageId);
@@ -93,9 +98,10 @@ class HeapFile {
 		HeaderPage headerPage = new HeaderPage();
 		// recuperer le contenu de headerPage
 		ByteBuffer bbBuffer = ByteBuffer.wrap(headbyteBuffer);
+		bbBuffer.position(0);
 		headerPage.setNbrDataPage(bbBuffer.getInt());
 		for (int i = 0; i < headerPage.getNbrDataPage(); i++) {
-			headerPage.addDataP(bbBuffer.getInt());
+			headerPage.setDataPages(bbBuffer.getInt());
 		}
 		ArrayList<Integer> list;
 		list = headerPage.getDataPages();
@@ -105,7 +111,7 @@ class HeapFile {
 			if (list.get(i) > 0) {
 
 				pageId.setFileIdx(relDef.getFileIdx());
-				pageId.setPageIdx(i);
+				pageId.setPageIdx(i+1);
 
 				bufferManager.freePage(headPage, 0);
 				return pageId;
@@ -119,7 +125,8 @@ class HeapFile {
 	}
 
 	public Rid writeRecordToDataPage(Record record, PageId pageId) throws IOException {
-		record=new Record(this.relDef);
+		//record=new Record(this.relDef);
+		record.setReldef(relDef);
 		PageId headPage = new PageId(relDef.getFileIdx(), 0);
 		byte[] buff = bufferManager.getPage(pageId);
 		byte[] bufferhead = bufferManager.getPage(headPage);
@@ -128,9 +135,10 @@ class HeapFile {
 		ArrayList<Integer> list;
 		list = head.getDataPages();
 		ByteBuffer bbBuffer = ByteBuffer.wrap(bufferhead);
+		bbBuffer.position(0);
 		int nbrDataPage = bbBuffer.getInt();
 		for (int i = 0; i < nbrDataPage; i++) {
-			head.addDataP(bbBuffer.getInt());
+			head.setDataPages(bbBuffer.getInt());
 
 		}
 
@@ -180,7 +188,8 @@ class HeapFile {
 	}
 
 	public Rid insertRecord(Record record) throws IOException {
-		record=new Record(this.relDef);
+		//record=new Record(this.relDef);
+		record.setReldef(relDef);
 		PageId page = new PageId(-1, -1);
 		try {
 			System.out.println("rdd");
@@ -201,11 +210,11 @@ class HeapFile {
 		PageId head = new PageId(relDef.getFileIdx(), 0);
 		byte[] bufferPage=bufferManager.getPage(head);
 		ByteBuffer bb=ByteBuffer.wrap(bufferPage);
-		
-		int nbrDatacount= bb.getInt();
+		bb.position(0);
+		int nbr= bb.getInt();
 		HeaderPage header = new HeaderPage();
 		int nbDataPage = header.getNbrDataPage();
-		for (int i = 0; i <= nbDataPage; i++) {
+		for (int i = 0; i < nbr; i++) {
 			page.setPageIdx(i+1);
 
 			listRecord.addAll(i, getRecordsInDataPage(page));
@@ -213,5 +222,4 @@ class HeapFile {
 
 		return listRecord;
 	}
-
 }

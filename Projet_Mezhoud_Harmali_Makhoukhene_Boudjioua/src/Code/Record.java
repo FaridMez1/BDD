@@ -25,7 +25,9 @@ public class Record {
 	public void setValues(List<String> values) {
 		this.values = values;
 	}
-
+public void setReldef(RelDef reldef) {
+	this.relDef=reldef;
+}
 	/**
 	 * 
 	 * @param buff
@@ -34,15 +36,17 @@ public class Record {
 	 *            indice du buffer .
 	 */
 
-	public void writeToBuffer(byte[] buff, int position) {
-      
+	public void writeToBuffer(byte[] buff, int pos) {
+		int position=(relDef.getSlotCount())+(pos*relDef.getRecordSize());
 		ByteBuffer bBuff = ByteBuffer.wrap(buff);
 		bBuff.position(position);
 
 		for (int i = 0; i < values.size(); i++) {
 			if (relDef.getTypeColonnes().get(i).equals("float")) {
-				bBuff.putFloat(Float.parseFloat(values.get(i)));
+				float fl=Float.parseFloat(values.get(i));
+				bBuff.putFloat(fl);
 			} else if (relDef.getTypeColonnes().get(i).equals("int")) {
+			
 				bBuff.putInt(Integer.parseInt(values.get(i)));
 			} else if (relDef.getTypeColonnes().get(i).contains("string")) {
 				String[] sTab = relDef.getTypeColonnes().get(i).split("string");
@@ -62,8 +66,9 @@ public class Record {
 	 *            position du flux
 	 */
 
-	public Record readFromBuffer(byte[] buff, int position) {
+	public Record readFromBuffer(byte[] buff, int pos) {
 		ByteBuffer bBuff = ByteBuffer.wrap(buff);
+		int position=(relDef.getSlotCount())+(pos*relDef.getRecordSize());
 		bBuff.position(position);
 		String str = "";
 		Record record = new Record(relDef);
@@ -75,12 +80,13 @@ public class Record {
 				li.add(str);
 				record.setValues(li);
 			} else if (relDef.getTypeColonnes().get(i).equals("int")) {
-				li.clear();
+				//li.clear();
 				str = "" + bBuff.getInt();
+				
 				li.add(str);
 				record.setValues(li);
-			} else if (relDef.getTypeColonnes().get(i).equals("string")) {
-				li.clear();
+			} else if (relDef.getTypeColonnes().get(i).contains("string")) {
+				//li.clear();
 				String[] sTab = relDef.getTypeColonnes().get(i).split("string");
 				int k = Integer.valueOf(sTab[1]);
 				String str1 = "";
