@@ -68,7 +68,7 @@ public class Record {
 		String str = "";
 		Record record = new Record(relDef);
 		List<String> li = new ArrayList<String>();
-
+//
 		for (int i = 0; i < relDef.getTypeColonnes().size(); i++) {
 			if (relDef.getTypeColonnes().get(i).equals("float")) {
 				str = "" + bBuff.getFloat();

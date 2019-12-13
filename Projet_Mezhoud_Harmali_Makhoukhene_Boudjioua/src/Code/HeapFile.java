@@ -178,7 +178,7 @@ class HeapFile {
 		}
 		return records;
 	}
-
+//
 	public Rid insertRecord(Record record) throws IOException {
 		record=new Record(this.relDef);
 		PageId page = new PageId(-1, -1);
