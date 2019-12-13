@@ -44,13 +44,10 @@ public class FileManager extends Object {
 	}
 
 	public Rid InsertRecordInRelation(Record record, String relName) throws IOException {
-	
-		Rid rid = new Rid(null, 0);
 		
+		Rid rid = new Rid(null, 0);
 
 		for (int i = 0; i < heapFilesList.size(); i++) {
-			RelDef relDef =  heapFilesList.get(i).getRelDef();
-			
 			if (heapFilesList.get(i).getRelDef().getNomRelation().equals(relName)) {
 				rid = heapFilesList.get(i).insertRecord(record);
 				return rid;

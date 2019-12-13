@@ -188,14 +188,14 @@ public class DBManager {
 		String relName = commande.get(1);
 		ArrayList<Record> allRecords = new ArrayList<Record>();
 		// RelDef reldef = new RelDef(relName, 0, null);
-	 // HeapFile heapFile = new HeapFile(reldef);
+		// HeapFile heapFile = new HeapFile(reldef);
 		for (int i = 0; i < fileManager.getHeapFiles().size(); i++) {
 			allRecords.addAll(fileManager.getHeapFiles().get(i).getAllRecords());
 		}
 		for (int i = 0; i < allRecords.size(); i++) {
-			
-				System.out.println(allRecords.get(i).getValues().toString() + " ; ");
-			
+			for (int k = 0; k < allRecords.get(i).getValues().size(); k++) {
+				System.out.println(allRecords.get(i).getValues().get(k).toString() + " ; ");
+			}
 		}
 		System.out.println("Total records = " + allRecords.size());
 	}

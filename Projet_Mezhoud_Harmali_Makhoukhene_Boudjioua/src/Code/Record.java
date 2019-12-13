@@ -25,9 +25,7 @@ public class Record {
 	public void setValues(List<String> values) {
 		this.values = values;
 	}
-public void setReldef(RelDef reldef) {
-	this.relDef=reldef;
-}
+
 	/**
 	 * 
 	 * @param buff
@@ -36,17 +34,15 @@ public void setReldef(RelDef reldef) {
 	 *            indice du buffer .
 	 */
 
-	public void writeToBuffer(byte[] buff, int pos) {
-		int position=(relDef.getSlotCount())+(pos*relDef.getRecordSize());
+	public void writeToBuffer(byte[] buff, int position) {
+      
 		ByteBuffer bBuff = ByteBuffer.wrap(buff);
 		bBuff.position(position);
 
 		for (int i = 0; i < values.size(); i++) {
 			if (relDef.getTypeColonnes().get(i).equals("float")) {
-				float fl=Float.parseFloat(values.get(i));
-				bBuff.putFloat(fl);
+				bBuff.putFloat(Float.parseFloat(values.get(i)));
 			} else if (relDef.getTypeColonnes().get(i).equals("int")) {
-			
 				bBuff.putInt(Integer.parseInt(values.get(i)));
 			} else if (relDef.getTypeColonnes().get(i).contains("string")) {
 				String[] sTab = relDef.getTypeColonnes().get(i).split("string");
@@ -66,9 +62,8 @@ public void setReldef(RelDef reldef) {
 	 *            position du flux
 	 */
 
-	public Record readFromBuffer(byte[] buff, int pos) {
+	public Record readFromBuffer(byte[] buff, int position) {
 		ByteBuffer bBuff = ByteBuffer.wrap(buff);
-		int position=(relDef.getSlotCount())+(pos*relDef.getRecordSize());
 		bBuff.position(position);
 		String str = "";
 		Record record = new Record(relDef);
@@ -80,13 +75,12 @@ public void setReldef(RelDef reldef) {
 				li.add(str);
 				record.setValues(li);
 			} else if (relDef.getTypeColonnes().get(i).equals("int")) {
-				//li.clear();
+				li.clear();
 				str = "" + bBuff.getInt();
-				
 				li.add(str);
 				record.setValues(li);
-			} else if (relDef.getTypeColonnes().get(i).contains("string")) {
-				//li.clear();
+			} else if (relDef.getTypeColonnes().get(i).equals("string")) {
+				li.clear();
 				String[] sTab = relDef.getTypeColonnes().get(i).split("string");
 				int k = Integer.valueOf(sTab[1]);
 				String str1 = "";
